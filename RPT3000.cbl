@@ -42,6 +42,10 @@
        WORKING-STORAGE SECTION.
        01  SWITCHES.
            05  CUSTMAST-EOF-SWITCH     PIC X    VALUE "N".
+           05  FIRST-RECORD-SWITCH     PIC X    VALUE "Y".
+
+       01  CONTROL-FIELDS.
+           05  OLD-BRANCH-NUMBER       PIC 99.
 
        01  PRINT-FIELDS.
            05  PAGE-COUNT      PIC S9(3)   VALUE ZERO.
@@ -50,6 +54,8 @@
            05  SPACE-CONTROL   PIC S9.
 
        01  TOTAL-FIELDS.
+           05 BRANCH-TOTAL-THIS-YTD   PIC S9(6)V99   VALUE ZERO.
+           05 BRANCH-TOTAL-LAST-YTD   PIC S9(6)V99   VALUE ZERO.
            05  GRAND-TOTAL-THIS-YTD   PIC S9(7)V99   VALUE ZERO.
            05  GRAND-TOTAL-LAST-YTD   PIC S9(7)V99   VALUE ZERO.
            05  GRAND-TOTAL-CHANGE-AMT PIC S9(7)V99   VALUE ZERO.
@@ -89,12 +95,13 @@
            05  FILLER          PIC X(7)   VALUE "RPT2000".
 
        01  HEADING-LINE-3.
+           05  FILLER PIC X(8)  VALUE "BRANCH  ".
            05  FILLER PIC X(20) VALUE "BRANCH SALES CUST   ".
            05  FILLER PIC X(23) VALUE "SALES                  ".
            05  FILLER PIC X(14) VALUE "SALES    ".
            05  FILLER PIC X(14) VALUE "CHANGE        ".
            05  FILLER PIC X(7)  VALUE "CHANGE ".
-           05  FILLER PIC X(52) VALUE SPACE.
+           05  FILLER PIC X(44) VALUE SPACE.
 
        01  HEADING-LINE-4.
            05  FILLER PIC X(20) VALUE "NUM    REP   NUM".
