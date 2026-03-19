@@ -2,10 +2,14 @@
 
        PROGRAM-ID. RPT3000.
       *****************************************************************
-      *  Programmers: Clay Rasmussen
+      *  Programmers: Clay Rasmussen and Kirby Dunker
       *  Date.......: March XX, 2025
       *  GitHub URL.: https://github.com/Clay-Rasmussen/RPT3000
-      *  Description: ADDME
+      *  Description: This program reads a customer master file and
+      *  produces a year-to-date sales report by branch.
+      *  It calculates sales changes (amount and percent),
+      *  prints customer detail lines, branch totals,
+      *  and overall grand totals with pagination.
       *****************************************************************
 
        ENVIRONMENT DIVISION.
@@ -13,12 +17,12 @@
        INPUT-OUTPUT SECTION.
 
        FILE-CONTROL.
-           SELECT CUSTMAST ASSIGN TO CUSTMAST.
-           SELECT RPT3000 ASSIGN TO RPT3000.
+           SELECT INPUT-CUSTMAST ASSIGN TO CUSTMAST.
+           SELECT OUTPUT-RPT3000 ASSIGN TO RPT3000.
 
        DATA DIVISION.
        FILE SECTION.
-       FD  CUSTMAST
+       FD  INPUT-CUSTMAST
            RECORDING MODE IS F
            LABEL RECORDS ARE STANDARD
            RECORD CONTAINS 130 CHARACTERS
@@ -33,12 +37,12 @@
            05  CM-SALES-LAST-YTD       PIC S9(5)V9(2).
            05  FILLER                  PIC X(87).
 
-       FD  RPT3000
+       FD  OUTPUT-RPT3000
            RECORDING MODE IS F
            LABEL RECORDS ARE STANDARD
            RECORD CONTAINS 130 CHARACTERS
            BLOCK CONTAINS 130 CHARACTERS.
-       
+
        01  PRINT-AREA      PIC X(130).
 
        WORKING-STORAGE SECTION.
@@ -190,15 +194,14 @@
 
        PROCEDURE DIVISION.
        000-PREPARE-SALES-REPORT.
-           OPEN INPUT  CUSTMAST
-                OUTPUT RPT3000.
+           OPEN INPUT  INPUT-CUSTMAST
+                OUTPUT OUTPUT-RPT3000.
            PERFORM 100-FORMAT-REPORT-HEADING.
-           PERFORM 310-READ-CUSTOMER-RECORD
            PERFORM 300-PREPARE-SALES-LINES
                UNTIL CUSTMAST-EOF-SWITCH = "Y".
            PERFORM 500-PRINT-GRAND-TOTALS.
-           CLOSE CUSTMAST
-                 RPT3000.
+           CLOSE INPUT-CUSTMAST
+                 OUTPUT-RPT3000.
            STOP RUN.
 
        100-FORMAT-REPORT-HEADING.
@@ -220,28 +223,28 @@
                  IF CM-BRANCH-NUMBER > OLD-BRANCH-NUMBER
                     PERFORM 360-PRINT-BRANCH-LINE
                     PERFORM 320-PRINT-CUSTOMER-LINE
-                    MOVE CM-BRANCH-NUMBER TO OLD-BRANCH-NUMBER 
+                    MOVE CM-BRANCH-NUMBER TO OLD-BRANCH-NUMBER
                  ELSE
                     PERFORM 320-PRINT-CUSTOMER-LINE
            ELSE
               PERFORM 360-PRINT-BRANCH-LINE.
 
        310-READ-CUSTOMER-RECORD.
-           READ CUSTMAST
+           READ INPUT-CUSTMAST
               AT END
                  MOVE "Y" TO CUSTMAST-EOF-SWITCH.
-       
+
        320-PRINT-CUSTOMER-LINE.
            IF LINE-COUNT > LINES-ON-PAGE
               PERFORM 330-PRINT-HEADING-LINES.
            IF FIRST-RECORD-SWITCH = "Y"
-              MOVE CM-BRANCH-NUMBER TO CL-BRANCH-NUMBER 
+              MOVE CM-BRANCH-NUMBER TO CL-BRANCH-NUMBER
            ELSE
               IF CM-BRANCH-NUMBER > OLD-BRANCH-NUMBER
-                 MOVE CM-BRANCH-NUMBER TO CL-BRANCH-NUMBER 
+                 MOVE CM-BRANCH-NUMBER TO CL-BRANCH-NUMBER
               ELSE
                  MOVE SPACE TO CL-BRANCH-NUMBER.
-           MOVE CM-CUSTOMER-NUMBER TO CL-CUSTOMER-NUMBER. 
+           MOVE CM-CUSTOMER-NUMBER TO CL-CUSTOMER-NUMBER.
            MOVE CM-CUSTOMER-NAME TO CL-CUSTOMER-NAME.
            MOVE CM-SALES-THIS-YTD TO CL-SALES-THIS-YTD.
            MOVE CM-SALES-LAST-YTD TO CL-SALES-LAST-YTD.
@@ -249,10 +252,10 @@
               CM-SALES-THIS-YTD - CM-SALES-LAST-YTD.
            MOVE WS-CHANGE-AMOUNT TO CL-CHANGE-AMOUNT.
            IF CM-SALES-LAST-YTD = ZERO
-              MOVE 999.9 TO CL-CHANGE-PERCENT 
+              MOVE 999.9 TO CL-CHANGE-PERCENT
            ELSE
               COMPUTE CL-CHANGE-PERCENT ROUNDED =
-                 WS-CHANGE-AMOUNT * 100 / CM-SALES-LAST-YTD 
+                 WS-CHANGE-AMOUNT * 100 / CM-SALES-LAST-YTD
                  ON SIZE ERROR
                     MOVE 999.9 TO CL-CHANGE-PERCENT.
            MOVE CUSTOMER-LINE TO PRINT-AREA.
@@ -278,11 +281,11 @@
            MOVE 2 TO SPACE-CONTROL.
 
        340-WRITE-PAGE-TOP-LINE.
-           WRITE PRINT-AREA AFTER ADVANCING PAGE.
+           WRITE PRINT-AREA.
            MOVE 1 TO LINE-COUNT.
 
        350-WRITE-REPORT-LINE.
-           WRITE PRINT-AREA AFTER ADVANCING SPACE-CONTROL LINES.
+           WRITE PRINT-AREA.
            ADD SPACE-CONTROL TO LINE-COUNT.
 
        360-PRINT-BRANCH-LINE.
@@ -294,8 +297,8 @@
            IF BRANCH-TOTAL-LAST-YTD = ZERO
               MOVE 999.9 TO BTL-CHANGE-PERCENT
            ELSE
-              COMPUTE BTL-CHANGE-PERCENT ROUNDED = 
-                 WS-CHANGE-AMOUNT * 100 / BRANCH-TOTAL-LAST-YTD 
+              COMPUTE BTL-CHANGE-PERCENT ROUNDED =
+                 WS-CHANGE-AMOUNT * 100 / BRANCH-TOTAL-LAST-YTD
                  ON SIZE ERROR
                     MOVE 999.9 TO BTL-CHANGE-PERCENT.
            MOVE BRANCH-TOTAL-LINE TO PRINT-AREA.
@@ -310,14 +313,14 @@
        500-PRINT-GRAND-TOTALS.
            MOVE GRAND-TOTAL-THIS-YTD TO GTL-SALES-THIS-YTD.
            MOVE GRAND-TOTAL-LAST-YTD TO GTL-SALES-LAST-YTD.
-           COMPUTE WS-CHANGE-AMOUNT = 
+           COMPUTE WS-CHANGE-AMOUNT =
               GRAND-TOTAL-THIS-YTD - GRAND-TOTAL-LAST-YTD.
            MOVE WS-CHANGE-AMOUNT TO GTL-CHANGE-AMOUNT.
            IF GRAND-TOTAL-LAST-YTD = ZERO
               MOVE 999.9 TO GTL-CHANGE-PERCENT
            ELSE
-              COMPUTE GTL-CHANGE-PERCENT ROUNDED = 
-                 WS-CHANGE-AMOUNT * 100 / GRAND-TOTAL-LAST-YTD 
+              COMPUTE GTL-CHANGE-PERCENT ROUNDED =
+                 WS-CHANGE-AMOUNT * 100 / GRAND-TOTAL-LAST-YTD
                  ON SIZE ERROR
                     MOVE 999.9 TO GTL-CHANGE-PERCENT.
            MOVE GRAND-TOTAL-LINE-1 TO PRINT-AREA.
