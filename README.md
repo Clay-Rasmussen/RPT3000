@@ -5,7 +5,7 @@ ___
 ___
 The **RPT3000** program is an enhanced COBOL reporting tool. It serves as a data processing utility that reads customer financial records from a master input file (`CUSTMAST`) and generates a formatted, multi-columnar Year-To-Date (YTD) Sales Report.
 
-Building upon the foundations of its predecessor (RPT2000), this version introduces ADDME
+Building upon the foundations of its predecessor (RPT2000), this version introduces automated branch break processing, detailed customer-level calculations, and improved report pagination. The program detects when the branch number changes, prints branch totals automatically, and continues processing records while maintaining accurate running totals. It also enhances the reporting structure by organizing customer records, totals, and separators in a clear, professional multi-page report format.
 
 ### Key Functionalities
 * **Data Transformation:** Processes raw record data, including branch numbers, sales representative IDs, and customer names.
@@ -39,8 +39,14 @@ ADDME
 
 ## Learning Outcomes
 ___
-
-ADDME
+This project helped reinforce several important COBOL and data processing concepts:
+*	Understanding COBOL file processing using sequential input and output files.
+*	Implementing control break logic to detect changes in branch numbers.
+*	Performing financial calculations such as sales differences and percentage changes.
+*	Designing formatted reports with headings, spacing, and structured output.
+*	Managing running totals and grand totals across multiple records.
+*	Using working storage variables effectively to track state, totals, and calculations.
+*	Improving program organization through structured procedures and modular design.
 
 ## Help
 ___
