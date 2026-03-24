@@ -35,7 +35,7 @@ ___
 
 ## Running Output
 ___
-ADDME
+![Program Output](assets/RPT3000Output.png)
 
 ## Learning Outcomes
 ___
