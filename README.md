@@ -35,7 +35,7 @@ ___
 
 ## Running Output
 ___
-![Program Output](assets/RPT3000Output.png)
+![Program Output](assets/RPT3RunningOutput.png)
 
 ## Learning Outcomes
 ___
@@ -47,6 +47,8 @@ This project helped reinforce several important COBOL and data processing concep
 *	Managing running totals and grand totals across multiple records.
 *	Using working storage variables effectively to track state, totals, and calculations.
 *	Improving program organization through structured procedures and modular design.
+*	One-Level Summary Report: Implemented a structured reporting approach that summarizes data at a single control level (branch), including automatic calculation and display of branch totals before moving to the next group.
+ * First-Record Switch: Utilized a control flag to properly handle the first record in the dataset, preventing premature control-break logic execution and ensuring accurate initialization of totals.
 
 ## Help
 ___
