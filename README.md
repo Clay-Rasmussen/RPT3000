@@ -60,15 +60,15 @@ ___
 ## Authors
 ___
 <img src="https://github.com/Clay-Rasmussen.png" alt="Profile Picture" width="100" />
-<img src="https://github.com/KirbyD-YEAH.png" alt="Profile Picture" width="100" />
-
 
 **Clay Rasmussen**
 * **Clay's GitHub Profile**: [Clay-Rasmussen](https://github.com/Clay-Rasmussen)
-* **Clay's Email**: [clrasm02@wsc.edu](mailto:clrasm02@wsc.edu)
+* **Clay's Email**: [Clrasm02@wsc.edu](mailto:clrasm02@wsc.edu)
+___
+<img src="https://github.com/KirbyD-YEAH.png" alt="Profile Picture" width="100" />
 
 **Kirby Dunker**
 * **Kirby's GitHub Profile**: [KirbyD-YEAH](https://github.com/KirbyD-YEAH)
-* **Kirby's Email**: [brdunk02@wsc.edu](mailto:brdunk@wsc.edu)
+* **Kirby's Email**: [brdunk02@wsc.edu](mailto:brdunk02@wsc.edu)
 
 [Back to the top](#overview)
